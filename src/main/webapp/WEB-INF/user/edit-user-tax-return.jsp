@@ -15,6 +15,14 @@
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <style>
+        @media only screen and (min-width: 768px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+            }
+        }
+    </style>
 </head>
 <body class="body-wrapper">
 
@@ -43,10 +51,19 @@
                                    href="${pageContext.request.contextPath}/taxreturn/action-report-list"><fmt:message
                                         key="user.header.actionList" bundle="${link}"/></a>
                             </li>
-                            <li class="nav-item ">
-                                <a class="nav-link"
-                                   href="${pageContext.request.contextPath}/taxreturn/history"><fmt:message
-                                        key="user.header.history.change" bundle="${link}"/></a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <fmt:message key="user.header.history" bundle="${link}"/>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item"
+                                       href="${pageContext.request.contextPath}/taxreturn/history/taxreturn"><fmt:message
+                                            key="user.header.history.tax" bundle="${link}"/></a>
+                                    <a class="dropdown-item"
+                                       href="${pageContext.request.contextPath}/taxreturn/history/change"><fmt:message
+                                            key="user.header.history.change" bundle="${link}"/></a>
+                                </div>
                             </li>
                         </ul>
                         <ul class="navbar-nav ml-auto mt-10">

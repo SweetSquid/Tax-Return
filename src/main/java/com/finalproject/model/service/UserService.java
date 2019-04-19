@@ -8,9 +8,12 @@ import com.finalproject.model.exception.NotUniqueEmailException;
 import com.finalproject.model.exception.NotUniqueIdCodeException;
 import com.finalproject.model.exception.NotUniquePhoneException;
 import com.finalproject.model.exception.NotUniqueUsernameException;
+import com.finalproject.model.service.encryption.JBCrypt;
+import com.finalproject.model.service.encryption.PasswordService;
 import com.finalproject.model.service.util.Utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.List;
 
@@ -30,8 +33,9 @@ public class UserService {
     }
 
     public boolean signIn(String username, String password) {
+        PasswordService service = new JBCrypt();
         Optional<User> user = username(username);
-        return user.filter(user1 -> password.equals(user1.getPassword())).isPresent();
+        return user.filter(user1 -> service.checkPassword(password, user1.getPassword())).isPresent();
     }
 
     public List<Integer> getInspectorIdList() {
@@ -42,7 +46,7 @@ public class UserService {
 
     public boolean register(HttpServletRequest request, String fullName,
                             String username, String email, String idCode, String phone, String password) {
-
+        PasswordService service = new JBCrypt();
         if (!Utils.isNotNull(fullName, username, email, password, idCode, phone)) {
             return false;
         } else {
@@ -52,7 +56,7 @@ public class UserService {
                 user.setFullname(fullName);
                 user.setUsername(username);
                 user.setEmail(email);
-                user.setPassword(password);
+                user.setPassword(service.createHash(password));
                 user.setPhone(phone);
                 user.setIdCode(idCode);
                 factory.create(user);
@@ -60,8 +64,11 @@ public class UserService {
             } catch (NotUniqueUsernameException | NotUniquePhoneException | NotUniqueEmailException | NotUniqueIdCodeException e) {
                 request.setAttribute("notUnique", e.getMessage());
                 return false;
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
+        return false;
     }
 
 }

@@ -217,10 +217,10 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
 
 
     @Override
-    public int getPageCount(int inpectorId) {
+    public int getPageCount(int inspectorId) {
         int result = 0;
         try (PreparedStatement statement = connection.prepareStatement(bundle.getString("taxreturn.get.page.count"))) {
-            statement.setInt(1, inpectorId);
+            statement.setInt(1, inspectorId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 result = rs.getInt(1);

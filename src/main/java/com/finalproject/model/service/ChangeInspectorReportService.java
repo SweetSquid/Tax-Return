@@ -57,7 +57,6 @@ public class ChangeInspectorReportService {
 
     public int getPageCount(int userId) {
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
-            System.out.println(dao.getPageCount(userId));
             return dao.getPageCount(userId) % postOnPage == 0 ? dao.getPageCount(userId) / postOnPage :
                     dao.getPageCount(userId) / postOnPage + 1;
         }

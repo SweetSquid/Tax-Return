@@ -4,6 +4,7 @@ import com.finalproject.model.dao.DaoFactory;
 import com.finalproject.model.dao.impl.JDBCUserFactory;
 import com.finalproject.model.entity.User;
 
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public class Main {
@@ -19,7 +20,11 @@ public class Main {
             user.setPhone("+380135476589");
             user.setPassword("1");
             user.setIdCode("12332112");
-            factory.create(user);
+            try {
+                factory.create(user);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

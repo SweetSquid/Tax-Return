@@ -8,7 +8,6 @@ import com.finalproject.controller.command.guest.Registration;
 import com.finalproject.controller.command.inspector.Approve;
 import com.finalproject.controller.command.inspector.Edit;
 import com.finalproject.controller.command.inspector.TaxReturnData;
-import com.finalproject.controller.command.user.history.UserHistory;
 import com.finalproject.model.entity.User.Role;
 
 import javax.servlet.*;
@@ -46,7 +45,6 @@ public class AuthorizationFilter implements Filter {
             commands.put("action-report-list", new com.finalproject.controller.command.user.UserActionReport());
             commands.put("action-report-list/edit", new com.finalproject.controller.command.user.Edit());
             commands.put("history/taxreturn", new com.finalproject.controller.command.user.history.UserHistory());
-            commands.put("history", new com.finalproject.controller.command.user.history.HistoryChoose());
             commands.put("change-inspector", new com.finalproject.controller.command.user.ChangeInspector());
             commands.put("history/change", new com.finalproject.controller.command.user.history.ChangeInspectorHistory());
             commands.put("logout", new Logout());

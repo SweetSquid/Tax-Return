@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GenericDao<T> extends AutoCloseable {
 
-    boolean create(T entity);
+    boolean create(T entity) throws SQLException;
 
     T extractFromResultSet(ResultSet rs) throws SQLException;
 

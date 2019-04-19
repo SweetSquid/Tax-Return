@@ -29,26 +29,56 @@ public class JDBCUserFactory implements UserDao {
 
 
     @Override
-    public boolean create(User user) throws NotUniqueUsernameException, NotUniqueEmailException, NotUniqueIdCodeException, NotUniquePhoneException {
-        if (findByType("username", user.getUsername()).isPresent()) {
-            LOGGER.error("attempt to register failed, non-unique " + user.getUsername());
-            throw new NotUniqueUsernameException(user.getUsername());
-        }
-        if (findByType("email", user.getEmail()).isPresent()) {
-            LOGGER.error("attempt to register failed, non-unique " + user.getEmail());
-
-            throw new NotUniqueEmailException(user.getEmail());
-        }
-        if (findByType("phone", user.getPhone()).isPresent()) {
-            LOGGER.error("attempt to register failed, non-unique " + user.getPhone());
-            throw new NotUniquePhoneException(user.getPhone());
-        }
-        if (findByType("id_code", user.getIdCode()).isPresent()) {
-            LOGGER.error("attempt to register failed, non-unique " + user.getIdCode());
-            throw new NotUniqueIdCodeException(user.getIdCode());
-        }
+    public boolean create(User user) throws NotUniqueUsernameException, NotUniqueEmailException, NotUniqueIdCodeException, NotUniquePhoneException, SQLException {
+        String queryUsername = "SELECT * FROM users WHERE username = ?";
+        String queryEmail = "SELECT * FROM users WHERE email = ?";
+        String queryPhone = "SELECT * FROM users WHERE phone = ?";
+        String queryIdCode = "SELECT * FROM users WHERE id_code = ?";
+        connection.setAutoCommit(false);
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("user.add"));
+            PreparedStatement ps = connection.prepareCall(queryUsername);
+            ps.setString(1, user.getUsername());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                LOGGER.error("Not unique username: " + user.getUsername());
+                throw new NotUniqueUsernameException(user.getUsername());
+            }
+            connection.commit();
+
+            ps = connection.prepareCall(queryPhone);
+            ps.setString(1, user.getPhone());
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                LOGGER.error("Not unique phone: " + user.getPhone());
+                throw new NotUniquePhoneException(user.getPhone());
+            }
+            connection.commit();
+
+            ps = connection.prepareCall(queryIdCode);
+            ps.setString(1, user.getIdCode());
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                LOGGER.error("Not unique id code: " + user.getIdCode());
+                throw new NotUniqueIdCodeException(user.getIdCode());
+            }
+            connection.commit();
+
+            ps = connection.prepareCall(queryEmail);
+            ps.setString(1, user.getEmail());
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                LOGGER.error("Not unique email: " + user.getEmail());
+                throw new NotUniqueEmailException(user.getEmail());
+            }
+            ps.close();
+            connection.commit();
+
+
+        } catch (SQLException e) {
+            connection.rollback();
+            e.printStackTrace();
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("user.add"))) {
             preparedStatement.setString(1, user.getRole().toString());
             preparedStatement.setString(2, user.getFullName());
             preparedStatement.setString(3, user.getUsername());
@@ -58,6 +88,7 @@ public class JDBCUserFactory implements UserDao {
             preparedStatement.setString(7, user.getIdCode());
             preparedStatement.execute();
             LOGGER.info("User " + user.getUsername() + " registered successfully");
+            connection.commit();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
