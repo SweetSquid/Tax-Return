@@ -7,18 +7,21 @@ import com.finalproject.model.entity.History;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class JDBCHistoryFactory implements HistoryDao {
     private Connection connection;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
     JDBCHistoryFactory(Connection connection) {
         this.connection = connection;
     }
 
+
     @Override
     public boolean create(History history) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(JDBCHistorySQL.CREATE.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("history.create"));
             preparedStatement.setInt(1, history.getTaxReturnId());
             preparedStatement.setInt(2, history.getUserId());
             preparedStatement.setString(3, history.getAction().toString());
@@ -40,7 +43,6 @@ public class JDBCHistoryFactory implements HistoryDao {
         history.setAction(Action.valueOf(rs.getString("action")));
         history.setMessage(rs.getString("message"));
         Timestamp date = (Timestamp) rs.getObject("date");
-        //TODO убрать t из вывода
         history.setDate(date.toLocalDateTime());
         return history;
     }
@@ -48,7 +50,7 @@ public class JDBCHistoryFactory implements HistoryDao {
     @Override
     public History readId(int id) {
         History result = new History();
-        try (PreparedStatement ps = connection.prepareCall(JDBCHistorySQL.READ.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("history.read.id"))) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -63,7 +65,7 @@ public class JDBCHistoryFactory implements HistoryDao {
     @Override
     public List<History> readAll() {
         List<History> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(JDBCHistorySQL.READ_ALL.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("history.read.all"))) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result.add(extractFromResultSet(rs));
@@ -96,7 +98,7 @@ public class JDBCHistoryFactory implements HistoryDao {
     @Override
     public List<History> getByUser(int userId) {
         List<History> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(JDBCHistorySQL.READ_BY_USER.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("history.read.by.user"))) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -111,10 +113,7 @@ public class JDBCHistoryFactory implements HistoryDao {
     @Override
     public List<History> getInRange(int offset, int length, int userId) {
         List<History> result = new ArrayList<>();
-
-        String query = "SELECT * FROM history WHERE user_id = ? LIMIT ?, ?;";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("history.get.range"))) {
             statement.setInt(1, userId);
             statement.setInt(2, offset);
             statement.setInt(3, length);
@@ -131,8 +130,7 @@ public class JDBCHistoryFactory implements HistoryDao {
     @Override
     public int getPageCount(int userId) {
         int result = 0;
-        String query = "SELECT COUNT(*) FROM history WHERE user_id = ? ";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("history.get.page.count"))) {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -144,19 +142,4 @@ public class JDBCHistoryFactory implements HistoryDao {
         }
     }
 
-    enum JDBCHistorySQL {
-        READ("SELECT a.tax_return_id, a.report_id, b.user_id, a.action, a.message, a.date\n" +
-                "FROM action_report a\n" +
-                "       LEFT JOIN tax_return b ON a.tax_return_id = b.tax_return_id" +
-                "WHERE history_id = ?;"),
-        READ_BY_USER("SELECT * FROM history WHERE user_id = ?"),
-        CREATE("INSERT INTO history (tax_return_id, user_id, action, message, date) VALUES (?, ?, ?, ?, ?)"),
-        READ_ALL("SELECT * FROM history");
-
-        String QUERY;
-
-        JDBCHistorySQL(String QUERY) {
-            this.QUERY = QUERY;
-        }
-    }
 }

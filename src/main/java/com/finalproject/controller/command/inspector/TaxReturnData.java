@@ -13,11 +13,9 @@ public class TaxReturnData implements Command {
         TaxReturnService taxReturnService = new TaxReturnService();
         String page = request.getParameter("page");
         int inspectorId = (int) request.getSession().getAttribute("userId");
-        System.out.println(inspectorId);
         request.setAttribute("taxReturnList", taxReturnService.getExpoList(page, inspectorId));
         request.setAttribute("currentPage", request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
         request.setAttribute("pageCount", taxReturnService.getPageCount(inspectorId));
-        System.out.println(taxReturnService.getPageCount(inspectorId));
         List<TaxReturn> taxReturnList = taxReturnService.getInspectorTaxReturn(inspectorId);
         request.getSession().setAttribute("taxReturnList", taxReturnList);
         return "/WEB-INF/inspector/user-tax-return.jsp";

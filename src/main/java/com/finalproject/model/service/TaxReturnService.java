@@ -84,7 +84,6 @@ public class TaxReturnService {
 
     public int getPageCount(int inspectorId) {
         try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
-            System.out.println(dao.getPageCount(inspectorId));
             return dao.getPageCount(inspectorId) % postOnPage == 0 ? dao.getPageCount(inspectorId) / postOnPage :
                     dao.getPageCount(inspectorId) / postOnPage + 1;
         }

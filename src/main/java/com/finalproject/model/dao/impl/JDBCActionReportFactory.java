@@ -6,9 +6,11 @@ import com.finalproject.model.entity.ActionReport;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class JDBCActionReportFactory implements ActionReportDao {
     private Connection connection;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
     JDBCActionReportFactory(Connection connection) {
         this.connection = connection;
@@ -17,7 +19,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
     @Override
     public boolean create(ActionReport actionReport) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ActionReportSQL.CREATE_ACTION_REPORT.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("action.report.create"));
             preparedStatement.setString(1, actionReport.getAction().toString());
             preparedStatement.setString(2, actionReport.getMessage());
             preparedStatement.setObject(3, actionReport.getDate());
@@ -37,16 +39,14 @@ public class JDBCActionReportFactory implements ActionReportDao {
         actionReport.setAction(ActionReport.Action.valueOf(rs.getString("action")));
         actionReport.setMessage(rs.getString("message"));
         Timestamp date = (Timestamp) rs.getObject("date");
-        //TODO убрать t из вывода
         actionReport.setDate(date.toLocalDateTime());
-        ;
         actionReport.setTaxReturnId(rs.getInt("tax_return_id"));
         return actionReport;
     }
 
     @Override
     public ActionReport readId(int reportId) {
-        try (PreparedStatement ps = connection.prepareCall(ActionReportSQL.READ_ID.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("action.report.read.id"))) {
             ps.setInt(1, reportId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -61,7 +61,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
     @Override
     public List<ActionReport> readAll() {
         List<ActionReport> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(ActionReportSQL.READ_ALL.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("action.report.read.all"))) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result.add(extractFromResultSet(rs));
@@ -75,7 +75,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
     @Override
     public List<ActionReport> userList(int userId) {
         List<ActionReport> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(ActionReportSQL.READ_ACTION_REPORT_LIST_BY_USER.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("action.report.read.list.user.id"))) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -96,7 +96,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
     @Override
     public boolean delete(int reportId) {
         try {
-            PreparedStatement statement = connection.prepareStatement(ActionReportSQL.DELETE_REPORT.QUERY);
+            PreparedStatement statement = connection.prepareStatement(bundle.getString("action.report.delete"));
             statement.setInt(1, reportId);
             statement.executeUpdate();
             return true;
@@ -116,16 +116,4 @@ public class JDBCActionReportFactory implements ActionReportDao {
         }
     }
 
-    enum ActionReportSQL {
-        CREATE_ACTION_REPORT("INSERT INTO action_report (report_id, action, message, date, tax_return_id) VALUES (DEFAULT, ?, ?, ?, ?)"),
-        READ_ACTION_REPORT_LIST_BY_USER("SELECT a.* FROM action_report a LEFT JOIN tax_return b ON a.tax_return_id = b.tax_return_id WHERE b.user_id = ?"),
-        READ_ALL("SELECT * FROM action_report"),
-        READ_ID("SELECT * FROM action_report WHERE report_id = ?"),
-        DELETE_REPORT("DELETE FROM action_report WHERE report_id = ?");
-        String QUERY;
-
-        ActionReportSQL(String QUERY) {
-            this.QUERY = QUERY;
-        }
-    }
 }

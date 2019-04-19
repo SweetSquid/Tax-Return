@@ -15,10 +15,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class JDBCUserFactory implements UserDao {
     private final static Logger LOGGER = Logger.getLogger(JDBCUserFactory.class.getSimpleName());
     private Connection connection;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
     JDBCUserFactory(Connection connection) {
         this.connection = connection;
@@ -46,7 +48,7 @@ public class JDBCUserFactory implements UserDao {
             throw new NotUniqueIdCodeException(user.getIdCode());
         }
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserSQL.ADD.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("user.add"));
             preparedStatement.setString(1, user.getRole().toString());
             preparedStatement.setString(2, user.getFullName());
             preparedStatement.setString(3, user.getUsername());
@@ -80,7 +82,7 @@ public class JDBCUserFactory implements UserDao {
     @Override
     public User readId(int id) {
         User user = new User();
-        try (PreparedStatement ps = connection.prepareCall("SELECT * FROM users WHERE role = 'INSPECTOR'")) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("user.find.role.inspector"))) {
             ResultSet rs = ps.executeQuery();
             user = extractFromResultSet(rs);
             LOGGER.info("Search user by id is successful");
@@ -142,7 +144,7 @@ public class JDBCUserFactory implements UserDao {
     @Override
     public List<Integer> getInspectorIdList() {
         List<Integer> inspectorList = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall("SELECT * FROM users WHERE role = 'INSPECTOR'")) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("user.find.role.inspector"))) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 inspectorList.add(extractFromResultSet(rs).getId());
@@ -151,18 +153,6 @@ public class JDBCUserFactory implements UserDao {
             e.printStackTrace();
         }
         return inspectorList;
-    }
-
-
-    enum UserSQL {
-
-        ADD("INSERT INTO users (id, role, fullname, username, email, password, phone, id_code) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)");
-
-        String QUERY;
-
-        UserSQL(String QUERY) {
-            this.QUERY = QUERY;
-        }
     }
 
 }

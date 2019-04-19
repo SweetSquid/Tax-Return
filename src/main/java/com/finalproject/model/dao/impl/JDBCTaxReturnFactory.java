@@ -7,18 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class JDBCTaxReturnFactory implements TaxReturnDao {
     private Connection connection;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
     JDBCTaxReturnFactory(Connection connection) {
         this.connection = connection;
     }
 
-    //TODO check CHANGE_INSPECTOR query
     @Override
     public boolean changeInspector(int inspectorId, int userId) {
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.CHANGE_INSPECTOR.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.change.inspector"))) {
             ps.setInt(1, inspectorId);
             ps.setInt(2, userId);
             return ps.execute();
@@ -31,7 +32,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public List<TaxReturn> getUserTaxReturn(int userId) {
         List<TaxReturn> taxReturnList = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.GET_ALL_USER_TAXRETURN.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.get.all.user.tax"))) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -46,7 +47,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public List<TaxReturn> getInspectorTaxReturn(int inspectorId) {
         List<TaxReturn> taxReturnList = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.GET_ALL_INSPECTOR_TAXRETURN.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.get.all.inspector.tax"))) {
             ps.setInt(1, inspectorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -66,12 +67,9 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public Optional<TaxReturn> findById(int taxReturnId) {
         Optional<TaxReturn> taxReturn = Optional.empty();
-
-        String query = "SELECT * FROM tax_return WHERE tax_return_id = ?";
-        try (PreparedStatement ps = connection.prepareCall(query)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.find.id"))) {
             ps.setInt(1, taxReturnId);
             ResultSet rs = ps.executeQuery();
-            //если надо выводить пару значений, поменять if на while
             if (rs.next()) {
                 taxReturn = Optional.of(extractFromResultSet(rs));
             }
@@ -84,7 +82,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public TaxReturn getTaxReturnByActionId(int actionReportId) {
         TaxReturn taxReturn = new TaxReturn();
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.GET_TAX_BY_ACTION_ID.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.get.tax.action.id"))) {
             ps.setInt(1, actionReportId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -98,7 +96,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
 
     @Override
     public boolean taxReturnHasReport(int taxReturnId) {
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.TAX_HAS_REPORT.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.has.report"))) {
             ps.setInt(1, taxReturnId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -113,8 +111,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public boolean create(TaxReturn taxReturn) {
         boolean result = false;
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TaxReturnSQL.CREATE.QUERY);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("taxreturn.create"))) {
             preparedStatement.setInt(1, taxReturn.getUserId());
             preparedStatement.setInt(2, taxReturn.getInspectorId());
             preparedStatement.setString(3, taxReturn.getCategory());
@@ -140,7 +137,6 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
         taxReturn.setMilitaryCollection(rs.getDouble("military_collection"));
         taxReturn.setIncomeTax(rs.getDouble("income_tax"));
         Timestamp date = (Timestamp) rs.getObject("date");
-        //TODO убрать t из вывода
         taxReturn.setDate(date.toLocalDateTime());
         return taxReturn;
 
@@ -160,7 +156,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public boolean update(TaxReturn taxReturn, int taxReturnId) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TaxReturnSQL.UPDATE.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("taxreturn.update"));
             preparedStatement.setString(1, taxReturn.getCategory());
             preparedStatement.setObject(2, taxReturn.getDate());
             preparedStatement.setDouble(3, taxReturn.getWage());
@@ -190,7 +186,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     }
 
     public Integer getInspectorId(int userId) {
-        try (PreparedStatement ps = connection.prepareCall(TaxReturnSQL.GET_INSPECTOR_ID.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.get.inspector.id"))) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -205,9 +201,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public List<TaxReturn> getInRange(int offset, int length, int inspectorId) {
         List<TaxReturn> result = new ArrayList<>();
-
-        String query = "SELECT a.* FROM tax_return a LEFT JOIN action_report b ON a.tax_return_id = b.tax_return_id WHERE b.tax_return_id IS NULL AND inspector_id = ? LIMIT ?, ?;";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("taxreturn.get.in.range"))) {
             statement.setInt(3, length);
             statement.setInt(2, offset);
             statement.setInt(1, inspectorId);
@@ -225,11 +219,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
     @Override
     public int getPageCount(int inpectorId) {
         int result = 0;
-        String query = "SELECT COUNT(*)" +
-                "FROM tax_return a" +
-                "       LEFT JOIN action_report b ON b.tax_return_id = a.tax_return_id " +
-                "WHERE b.tax_return_id IS NULL AND inspector_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("taxreturn.get.page.count"))) {
             statement.setInt(1, inpectorId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -241,24 +231,4 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
         }
     }
 
-
-    enum TaxReturnSQL {
-        CREATE("INSERT INTO tax_return (tax_return_id, user_id, inspector_id, category_id, date, wage, military_collection, income_tax) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)"),
-        UPDATE("UPDATE tax_return SET category_id = ?, date = ?, wage = ?, military_collection = ?, income_tax = ? WHERE tax_return_id= ?"),
-        CHANGE_INSPECTOR("UPDATE tax_return SET inspector_id = ? WHERE user_id = ?"),
-        GET_ALL_USER_TAXRETURN("SELECT * FROM tax_return WHERE user_id = ?"),
-        GET_TAX_BY_ACTION_ID("SELECT a.* FROM tax_return a LEFT JOIN action_report b ON a.tax_return_id = b.tax_return_id WHERE b.report_id = ? AND action = 'EDIT'"),
-        TAX_HAS_REPORT("SELECT * FROM action_report WHERE tax_return_id = ?"),
-        GET_INSPECTOR_ID("SELECT * FROM tax_return WHERE user_id = ?"),
-        GET_ALL_INSPECTOR_TAXRETURN("SELECT *\n" +
-                "FROM tax_return a\n" +
-                "       LEFT JOIN action_report b ON b.tax_return_id = a.tax_return_id\n" +
-                "WHERE b.tax_return_id IS NULL AND inspector_id = ?");
-
-        String QUERY;
-
-        TaxReturnSQL(String QUERY) {
-            this.QUERY = QUERY;
-        }
-    }
 }

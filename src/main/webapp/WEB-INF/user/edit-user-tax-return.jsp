@@ -46,7 +46,7 @@
                             <li class="nav-item ">
                                 <a class="nav-link"
                                    href="${pageContext.request.contextPath}/taxreturn/history"><fmt:message
-                                        key="user.header.history" bundle="${link}"/></a>
+                                        key="user.header.history.change" bundle="${link}"/></a>
                             </li>
                         </ul>
                         <ul class="navbar-nav ml-auto mt-10">

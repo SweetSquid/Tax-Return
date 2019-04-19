@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 
 public class NewTaxReturn implements Command {
-    //TODO сделать так, чтобы был только один инспектор tax.setInspectorId()
     @Override
     public String execute(HttpServletRequest request) {
         UserService userService = new UserService();

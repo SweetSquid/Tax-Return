@@ -12,13 +12,11 @@
 
     <title><fmt:message key="guest.main.header" bundle="${link}"/></title>
 
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="${pageContext.request.contextPath}/webjars/jquery/3.0.0/jquery.js"></script>
-    <script src="${pageContext.request.contextPath}/webjars/jquery/"></script>
 
 </head>
 <body class="body-wrapper">

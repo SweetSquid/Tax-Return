@@ -7,9 +7,11 @@ import com.finalproject.model.entity.ChangeInspectorReport;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDao {
     private Connection connection;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
     JDBCChangeInspectorReportFactory(Connection connection) {
         this.connection = connection;
@@ -18,7 +20,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public boolean create(ChangeInspectorReport entity) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ChangeInspectorReportSQL.CREATE.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.create"));
             preparedStatement.setInt(1, entity.getUserId());
             preparedStatement.setInt(2, entity.getPreviousInspectorId());
             preparedStatement.setInt(3, entity.getNewInspectorId());
@@ -43,14 +45,13 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
         changeInspectorReport.setMessage(rs.getString("message"));
         changeInspectorReport.setStatus(ChangeInspectorReport.Status.valueOf(rs.getString("status")));
         Timestamp date = (Timestamp) rs.getObject("date");
-        //TODO убрать t из вывода
         changeInspectorReport.setDate(date.toLocalDateTime());
         return changeInspectorReport;
     }
 
     @Override
     public ChangeInspectorReport readId(int id) {
-        try (PreparedStatement ps = connection.prepareCall(ChangeInspectorReportSQL.READ_ID.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("change.inspector.read.id"))) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -65,7 +66,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public List<ChangeInspectorReport> readAll() {
         List<ChangeInspectorReport> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(ChangeInspectorReportSQL.READ_ALL.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("change.inspector.read.all"))) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result.add(extractFromResultSet(rs));
@@ -79,7 +80,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public boolean update(ChangeInspectorReport entity, int id) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ChangeInspectorReportSQL.UPDATE.QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.update"));
             preparedStatement.setInt(1, entity.getNewInspectorId());
             preparedStatement.setString(2, null);
             preparedStatement.setString(3, entity.getStatus().toString());
@@ -113,7 +114,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public List<ChangeInspectorReport> getByUserId(int userId) {
         List<ChangeInspectorReport> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareCall(ChangeInspectorReportSQL.GET_BY_ID.QUERY)) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("change.inspector.read.user.id"))) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -128,9 +129,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public List<ChangeInspectorReport> getInRange(int offset, int length, int userId) {
         List<ChangeInspectorReport> result = new ArrayList<>();
-
-        String query = "SELECT * FROM change_inspector_report WHERE user_id = ? LIMIT ?, ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("change.inspector.get.range"))) {
             statement.setInt(3, length);
             statement.setInt(1, userId);
             statement.setInt(2, offset);
@@ -147,8 +146,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     @Override
     public int getPageCount(int userId) {
         int result = 0;
-        String query = "SELECT COUNT(*) FROM change_inspector_report WHERE user_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("change.inspector.page.count"))) {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -157,20 +155,6 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    enum ChangeInspectorReportSQL {
-        CREATE("INSERT INTO change_inspector_report (id, user_id, previous_inspector_id, new_inspector_id, message, status, date) " +
-                "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)"),
-        READ_ID("SELECT * FROM change_inspector_report WHERE id = ?"),
-        READ_ALL("SELECT * FROM change_inspector_report WHERE status = 'CHANGE'"),
-        GET_BY_ID("SELECT * FROM change_inspector_report WHERE user_id = ?"),
-        UPDATE("UPDATE change_inspector_report SET new_inspector_id = ?, message = ?, status = ?, date = ? WHERE id= ?");
-        String QUERY;
-
-        ChangeInspectorReportSQL(String QUERY) {
-            this.QUERY = QUERY;
         }
     }
 }
