@@ -95,7 +95,15 @@ create index inspector_id_idx
 create index user_id_idx
   on tax_return (user_id);
 
-INSERT INTO users (id, role, fullname, username, email, password, phone, id_code) VALUES (DEFAULT, 'ADMIN', 'admin', 'admin@gmail.com', '$2a$04$Upjk0iO1PDvwtwEcXWY9SOiDmsBhgRTYnSOnndpur31JoIn5vSTKC' , '+3800000000000', '00000001');
+INSERT INTO users (id, role, fullname, username, email, password, phone, id_code)
+VALUES (DEFAULT,
+        'ADMIN',
+        'admin',
+        'admin',
+        'admin@gmail.com',
+        '$2a$04$Upjk0iO1PDvwtwEcXWY9SOiDmsBhgRTYnSOnndpur31JoIn5vSTKC',
+        '+3800000000000',
+        '00000001');
 INSERT INTO users (id, role, fullname, username, email, password, phone, id_code) VALUES (DEFAULT, 'INSPECTOR', 'Інспектор №1', 'inspector0', 'inspector0@gmail.com', '$2a$04$Upjk0iO1PDvwtwEcXWY9SOiDmsBhgRTYnSOnndpur31JoIn5vSTKC', '+3800000000001', '00000002');
 INSERT INTO users (id, role, fullname, username, email, password, phone, id_code) VALUES (DEFAULT, 'INSPECTOR', 'Інспектор №2', 'inspector1', 'inspector1@gmail.com', '$2a$04$Upjk0iO1PDvwtwEcXWY9SOiDmsBhgRTYnSOnndpur31JoIn5vSTKC', '+3800000000002', '00000003');
 INSERT INTO users (id, role, fullname, username, email, password, phone, id_code) VALUES (DEFAULT, 'INSPECTOR', 'Інспектор №3', 'inspector2', 'inspector2@gmail.com', '$2a$04$Upjk0iO1PDvwtwEcXWY9SOiDmsBhgRTYnSOnndpur31JoIn5vSTKC', '+3800000000003', '00000004');
