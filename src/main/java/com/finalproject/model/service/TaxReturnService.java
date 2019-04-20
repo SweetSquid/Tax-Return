@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class TaxReturnService {
     private DaoFactory daoFactory = DaoFactory.getInstance();
-    private int postOnPage = 3;
+    private static final int POST_ON_PAGE = 3;
 
     public Optional<TaxReturn> id(int id) {
         Optional<TaxReturn> result;
@@ -77,15 +77,15 @@ public class TaxReturnService {
     public List<TaxReturn> getTaxReturnList(String currentPage, int inspectorId) {
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
-            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * postOnPage;
-            return dao.getInRange(currentPageInt, postOnPage, inspectorId);
+            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * POST_ON_PAGE;
+            return dao.getInRange(currentPageInt, POST_ON_PAGE, inspectorId);
         }
     }
 
     public int getPageCount(int inspectorId) {
         try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
-            return dao.getPageCount(inspectorId) % postOnPage == 0 ? dao.getPageCount(inspectorId) / postOnPage :
-                    dao.getPageCount(inspectorId) / postOnPage + 1;
+            return dao.getPageCount(inspectorId) % POST_ON_PAGE == 0 ? dao.getPageCount(inspectorId) / POST_ON_PAGE :
+                    dao.getPageCount(inspectorId) / POST_ON_PAGE + 1;
         }
     }
 }

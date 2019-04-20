@@ -120,7 +120,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <%--//TODO сделать сортировку по кнопкам--%>
                     <c:forEach items="${userActionReportList}" var="actionReport">
                         <tr>
                             <td class="w-25"><span class="categories ol1"><c:out

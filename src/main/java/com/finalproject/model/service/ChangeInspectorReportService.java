@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ChangeInspectorReportService {
     private DaoFactory daoFactory = DaoFactory.getInstance();
-    private int postOnPage = 6;
+    private static final int POST_ON_PAGE = 6;
 
     public List<ChangeInspectorReport> readAll() {
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
@@ -56,15 +56,15 @@ public class ChangeInspectorReportService {
     public List<ChangeInspectorReport> getChangeList(String currentPage, int userId) {
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
-            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * postOnPage;
-            return dao.getInRange(currentPageInt, postOnPage, userId);
+            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * POST_ON_PAGE;
+            return dao.getInRange(currentPageInt, POST_ON_PAGE, userId);
         }
     }
 
     public int getPageCount(int userId) {
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
-            return dao.getPageCount(userId) % postOnPage == 0 ? dao.getPageCount(userId) / postOnPage :
-                    dao.getPageCount(userId) / postOnPage + 1;
+            return dao.getPageCount(userId) % POST_ON_PAGE == 0 ? dao.getPageCount(userId) / POST_ON_PAGE :
+                    dao.getPageCount(userId) / POST_ON_PAGE + 1;
         }
     }
 }

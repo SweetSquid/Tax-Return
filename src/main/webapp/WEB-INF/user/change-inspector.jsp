@@ -28,7 +28,6 @@
 </head>
 <body class="body-wrapper">
 
-<%--//TODO поменять названия для каждой странички--%>
 <section>
     <div class="container">
         <div class="row">

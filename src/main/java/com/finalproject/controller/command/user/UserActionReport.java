@@ -18,7 +18,6 @@ public class UserActionReport implements Command {
                 .filter(p -> p.getAction().equals(ActionReport.Action.EDIT))
                 .collect(Collectors.toList());
 
-        //TODO mb set to request, not to session
         request.getSession().setAttribute("userActionReportList", actionReportList);
         return "/WEB-INF/user/user-action-report.jsp";
     }

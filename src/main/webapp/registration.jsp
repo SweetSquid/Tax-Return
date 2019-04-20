@@ -19,7 +19,6 @@
     <script src="${pageContext.request.contextPath}/webjars/jquery/"></script>
 
 </head>
-<%--\\TODO already have an account?--%>
 <body class="body-wrapper">
 <section>
     <div class="container">

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HistoryService {
     private DaoFactory daoFactory = DaoFactory.getInstance();
-    private int postOnPage = 7;
+    private static final int POST_ON_PAGE = 7;
 
     public boolean create(int taxId, int userId, ActionReport.Action action, String message) {
         try (JDBCHistoryFactory historyDao = daoFactory.createHistory()) {
@@ -30,14 +30,14 @@ public class HistoryService {
 
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCHistoryFactory historyDao = daoFactory.createHistory()) {
-            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * postOnPage;
-            return historyDao.getInRange(currentPageInt, postOnPage, userId);
+            currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * POST_ON_PAGE;
+            return historyDao.getInRange(currentPageInt, POST_ON_PAGE, userId);
         }
     }
 
     public int getPageCount(int userId) {
         try (JDBCHistoryFactory historyDao = daoFactory.createHistory()) {
-            return historyDao.getPageCount(userId) / postOnPage + 1;
+            return historyDao.getPageCount(userId) / POST_ON_PAGE + 1;
         }
     }
 }

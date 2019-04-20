@@ -91,7 +91,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <%--//TODO сделать сортировку по кнопкам--%>
 
                     <c:forEach items="${changeInspectorList}" var="changeInspector">
                         <form id="change-inspector-form" name="change-inspector" method="post"
@@ -108,7 +107,6 @@
                                          <c:forEach items="${inspectorList}" var="inspector">
                                              <c:if test="${inspector ne changeInspector.getPreviousInspectorId()}">
                                                  <option><c:out value="${inspector}"/></option>
-                                                 <%--//TODO попытаться кидать в request, а не сессию--%>
                                              </c:if>
                                          </c:forEach>
                                      </select>

@@ -122,17 +122,20 @@ public class JDBCUserFactory implements UserDao {
 
     @Override
     public List<User> readAll() {
+        //TODO create method
         return null;
     }
 
     @Override
     public boolean update(User user, int id) {
+        //TODO create method
         return false;
     }
 
 
     @Override
     public boolean delete(int id) {
+        //TODO create method
         return false;
     }
 

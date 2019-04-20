@@ -4,7 +4,6 @@ package com.finalproject.model.entity;
 import java.util.Objects;
 
 public class User {
-    //TODO применить билдер для создания объекта
     private int id;
     private Role role;
     private String fullname;
@@ -12,7 +11,6 @@ public class User {
     private String phone;
     private String email;
     private String idCode;
-    //TODO сохранять пароль Jbcrypt
     private String password;
 
     public int getId() {

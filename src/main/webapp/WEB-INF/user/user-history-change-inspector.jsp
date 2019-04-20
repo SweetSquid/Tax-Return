@@ -121,7 +121,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <%--//TODO сделать сортировку по кнопкам--%>
 
                     <c:forEach items="${reportList}" var="report">
                         <form id="change-inspector-form" name="change-inspector" method="post"

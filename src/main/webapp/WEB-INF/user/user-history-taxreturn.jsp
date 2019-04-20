@@ -134,7 +134,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <%--//TODO сделать сортировку по кнопкам--%>
                     <c:forEach items="${historyList}" var="history">
                         <input type="hidden" name="currentPage" value="1">
                         <tr>
