@@ -1,3 +1,5 @@
+CREATE DATABASE finalproject
+
 create table users
 (
   id       int auto_increment
