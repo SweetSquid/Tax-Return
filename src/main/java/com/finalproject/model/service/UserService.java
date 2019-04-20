@@ -11,13 +11,16 @@ import com.finalproject.model.exception.NotUniqueUsernameException;
 import com.finalproject.model.service.encryption.JBCrypt;
 import com.finalproject.model.service.encryption.PasswordService;
 import com.finalproject.model.service.util.Utils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
+    private final static Logger LOGGER = Logger.getLogger(UserService.class.getSimpleName());
+
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
     public boolean userHasInspector(int userId) {
@@ -60,9 +63,11 @@ public class UserService {
                 user.setPhone(phone);
                 user.setIdCode(idCode);
                 factory.create(user);
+                LOGGER.info("User " + username + " has registered successfully");
                 return true;
             } catch (NotUniqueUsernameException | NotUniquePhoneException | NotUniqueEmailException | NotUniqueIdCodeException e) {
                 request.setAttribute("notUnique", e.getMessage());
+                LOGGER.error("Not unique data at registration");
                 return false;
             } catch (SQLException e) {
                 e.printStackTrace();

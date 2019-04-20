@@ -3,6 +3,7 @@ package com.finalproject.model.dao.impl;
 import com.finalproject.model.dao.HistoryDao;
 import com.finalproject.model.entity.ActionReport.Action;
 import com.finalproject.model.entity.History;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ResourceBundle;
 public class JDBCHistoryFactory implements HistoryDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
+    private final static Logger LOGGER = Logger.getLogger(JDBCHistoryFactory.class.getSimpleName());
 
     JDBCHistoryFactory(Connection connection) {
         this.connection = connection;
@@ -30,6 +32,7 @@ public class JDBCHistoryFactory implements HistoryDao {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while creating history ");
             e.printStackTrace();
         }
         return false;
@@ -57,6 +60,7 @@ public class JDBCHistoryFactory implements HistoryDao {
                 result = extractFromResultSet(rs);
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for history with id: " + id);
             e.printStackTrace();
         }
         return result;
@@ -71,6 +75,7 @@ public class JDBCHistoryFactory implements HistoryDao {
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for all history");
             e.printStackTrace();
         }
         return result;
@@ -105,6 +110,7 @@ public class JDBCHistoryFactory implements HistoryDao {
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for history list by user id: " + userId);
             e.printStackTrace();
         }
         return result;
@@ -123,6 +129,8 @@ public class JDBCHistoryFactory implements HistoryDao {
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for list of history in range (" + offset +
+                    ", " + length + ") by user id: " + userId);
             throw new RuntimeException(e);
         }
     }
@@ -138,6 +146,7 @@ public class JDBCHistoryFactory implements HistoryDao {
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for count of query");
             throw new RuntimeException(e);
         }
     }

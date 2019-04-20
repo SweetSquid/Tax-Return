@@ -29,6 +29,12 @@ public class ChangeInspectorReportService {
         }
     }
 
+    public boolean checkExistence(int userId) {
+        try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
+            return dao.checkExistence(userId);
+        }
+    }
+
     public boolean create(int userId, int prevInspId, String message, ChangeInspectorReport.Status status) {
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
             ChangeInspectorReport changeInspectorReport = new ChangeInspectorReport();
@@ -47,7 +53,7 @@ public class ChangeInspectorReportService {
         }
     }
 
-    public List<ChangeInspectorReport> getExpoList(String currentPage, int userId) {
+    public List<ChangeInspectorReport> getChangeList(String currentPage, int userId) {
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
             currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * postOnPage;

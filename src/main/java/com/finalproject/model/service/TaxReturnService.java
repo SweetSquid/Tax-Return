@@ -74,7 +74,7 @@ public class TaxReturnService {
         }
     }
 
-    public List<TaxReturn> getExpoList(String currentPage, int inspectorId) {
+    public List<TaxReturn> getTaxReturnList(String currentPage, int inspectorId) {
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
             currentPageInt = currentPageInt <= 0 ? 0 : (currentPageInt - 1) * postOnPage;

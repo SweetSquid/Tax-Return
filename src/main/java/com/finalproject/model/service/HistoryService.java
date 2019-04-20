@@ -26,7 +26,7 @@ public class HistoryService {
     }
 
 
-    public List<History> getExpoList(String currentPage, int userId) {
+    public List<History> getHistoryList(String currentPage, int userId) {
 
         int currentPageInt = currentPage != null ? Integer.parseInt(currentPage) : 1;
         try (JDBCHistoryFactory historyDao = daoFactory.createHistory()) {

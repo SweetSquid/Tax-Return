@@ -6,6 +6,7 @@ import com.finalproject.model.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 
 public class Registration implements Command {
+
     @Override
     public String execute(HttpServletRequest request) {
         String fullName = request.getParameter("fullName");

@@ -2,6 +2,7 @@ package com.finalproject.model.dao.impl;
 
 import com.finalproject.model.dao.TaxReturnDao;
 import com.finalproject.model.entity.TaxReturn;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ResourceBundle;
 public class JDBCTaxReturnFactory implements TaxReturnDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
+    private final static Logger LOGGER = Logger.getLogger(JDBCTaxReturnFactory.class.getSimpleName());
 
     JDBCTaxReturnFactory(Connection connection) {
         this.connection = connection;
@@ -24,6 +26,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             ps.setInt(2, userId);
             return ps.execute();
         } catch (SQLException e) {
+            LOGGER.error("SQL exception while changing inspector by userId: " + userId);
             e.printStackTrace();
         }
         return false;
@@ -39,6 +42,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
                 taxReturnList.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for tax return list by userId: " + userId);
             e.printStackTrace();
         }
         return taxReturnList;
@@ -58,6 +62,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             }
 
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for tax return list by inspectorId: " + inspectorId);
             e.printStackTrace();
         }
         return taxReturnList;
@@ -74,6 +79,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
                 taxReturn = Optional.of(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for tax return by id: " + taxReturnId);
             e.printStackTrace();
         }
         return taxReturn;
@@ -89,6 +95,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
                 taxReturn = extractFromResultSet(rs);
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for tax return by action report id: " + actionReportId);
             e.printStackTrace();
         }
         return taxReturn;
@@ -103,6 +110,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
                 return true;
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for existence of action report by tax return id: " + taxReturnId);
             e.printStackTrace();
         }
         return false;
@@ -121,6 +129,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             preparedStatement.setDouble(7, taxReturn.getIncomeTax());
             result = preparedStatement.execute();
         } catch (SQLException e) {
+            LOGGER.error("SQLException while creating tax return");
             e.printStackTrace();
         }
         return result;
@@ -166,6 +175,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while updating tax return with id: " + taxReturnId);
             e.printStackTrace();
         }
         return false;
@@ -193,6 +203,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
                 return extractFromResultSet(rs).getInspectorId();
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for inspector id by user id: " + userId);
             e.printStackTrace();
         }
         return null;
@@ -211,6 +222,8 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for list of tax return in range (" + offset +
+                    ", " + length + ") by inspector id: " + inspectorId);
             throw new RuntimeException(e);
         }
     }
@@ -227,6 +240,7 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for count of query");
             throw new RuntimeException(e);
         }
     }

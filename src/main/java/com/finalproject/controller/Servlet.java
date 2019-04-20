@@ -38,7 +38,6 @@ public class Servlet extends HttpServlet {
             loggedUsers.add((String) request.getSession().getAttribute("loggedUser"));
         }
 
-        request.setAttribute("userTaxReturnId", request.getParameter("id"));
         if (request.getParameter("editActionId") != null) {
             request.getSession().setAttribute("editActionReturnId", request.getParameter("editActionId"));
         }

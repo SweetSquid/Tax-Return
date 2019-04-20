@@ -43,7 +43,6 @@ public class JDBCUserFactory implements UserDao {
                 LOGGER.error("Not unique username: " + user.getUsername());
                 throw new NotUniqueUsernameException(user.getUsername());
             }
-            connection.commit();
 
             ps = connection.prepareCall(queryPhone);
             ps.setString(1, user.getPhone());
@@ -52,7 +51,6 @@ public class JDBCUserFactory implements UserDao {
                 LOGGER.error("Not unique phone: " + user.getPhone());
                 throw new NotUniquePhoneException(user.getPhone());
             }
-            connection.commit();
 
             ps = connection.prepareCall(queryIdCode);
             ps.setString(1, user.getIdCode());
@@ -61,7 +59,6 @@ public class JDBCUserFactory implements UserDao {
                 LOGGER.error("Not unique id code: " + user.getIdCode());
                 throw new NotUniqueIdCodeException(user.getIdCode());
             }
-            connection.commit();
 
             ps = connection.prepareCall(queryEmail);
             ps.setString(1, user.getEmail());
@@ -72,8 +69,6 @@ public class JDBCUserFactory implements UserDao {
             }
             ps.close();
             connection.commit();
-
-
         } catch (SQLException e) {
             connection.rollback();
             e.printStackTrace();
@@ -91,6 +86,7 @@ public class JDBCUserFactory implements UserDao {
             connection.commit();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException: user " + user.getUsername() + " wasn't registered");
             e.printStackTrace();
         }
         return false;
@@ -166,8 +162,8 @@ public class JDBCUserFactory implements UserDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            LOGGER.error("SQLException while searching for user by " + type);
         }
-
         return result;
     }
 
@@ -180,8 +176,10 @@ public class JDBCUserFactory implements UserDao {
             while (rs.next()) {
                 inspectorList.add(extractFromResultSet(rs).getId());
             }
+            LOGGER.info("Search inspector id list is successful");
         } catch (SQLException e) {
             e.printStackTrace();
+            LOGGER.error("SQLException while searching for inspector id list");
         }
         return inspectorList;
     }

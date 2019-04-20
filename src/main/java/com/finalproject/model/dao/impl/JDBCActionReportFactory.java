@@ -2,6 +2,7 @@ package com.finalproject.model.dao.impl;
 
 import com.finalproject.model.dao.ActionReportDao;
 import com.finalproject.model.entity.ActionReport;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ResourceBundle;
 public class JDBCActionReportFactory implements ActionReportDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
+    private final static Logger LOGGER = Logger.getLogger(JDBCActionReportFactory.class.getSimpleName());
 
     JDBCActionReportFactory(Connection connection) {
         this.connection = connection;
@@ -27,6 +29,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while creating action report");
             e.printStackTrace();
         }
         return false;
@@ -53,6 +56,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
                 return extractFromResultSet(rs);
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for action report by id: " + reportId);
             e.printStackTrace();
         }
         return null;
@@ -67,6 +71,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for all action reports");
             e.printStackTrace();
         }
         return result;
@@ -82,6 +87,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for action report list by user id: " + userId);
             e.printStackTrace();
         }
         return result;
@@ -101,8 +107,8 @@ public class JDBCActionReportFactory implements ActionReportDao {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while deleting action report by id: " + reportId);
             e.printStackTrace();
-
         }
         return false;
     }

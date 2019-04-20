@@ -13,7 +13,7 @@ public class ChangeInspectorHistory implements Command {
 
         String page = request.getParameter("page");
 
-        request.setAttribute("reportList", service.getExpoList(page, userId));
+        request.setAttribute("reportList", service.getChangeList(page, userId));
         request.setAttribute("currentPage", request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
         request.setAttribute("pageCount", service.getPageCount(userId));
 

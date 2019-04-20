@@ -5,11 +5,14 @@ import com.finalproject.model.entity.ChangeInspectorReport;
 import com.finalproject.model.service.ChangeInspectorReportService;
 import com.finalproject.model.service.UserService;
 import com.finalproject.model.service.util.Utils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class ChangeUserInspector implements Command {
+    private final static Logger LOGGER = Logger.getLogger(ChangeUserInspector.class.getSimpleName());
+
     @Override
     public String execute(HttpServletRequest request) {
         UserService userService = new UserService();
@@ -25,6 +28,8 @@ public class ChangeUserInspector implements Command {
             changeInspectorReport.setMessage("");
             changeInspectorReport.setStatus(ChangeInspectorReport.Status.APPROVED);
             changeInspectorReportService.update(changeInspectorReport, id);
+            LOGGER.info("Successful change of user's inspector from " + changeInspectorReport.getPreviousInspectorId() +
+                    " to " + changeInspectorReport.getNewInspectorId());
         }
         request.setAttribute("changeInspectorList", changeInspectorList);
 

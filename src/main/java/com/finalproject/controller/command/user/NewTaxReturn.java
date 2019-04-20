@@ -4,12 +4,14 @@ import com.finalproject.controller.command.Command;
 import com.finalproject.model.service.TaxReturnService;
 import com.finalproject.model.service.UserService;
 import com.finalproject.model.entity.TaxReturn;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Random;
 
 public class NewTaxReturn implements Command {
+    private final static Logger LOGGER = Logger.getLogger(NewTaxReturn.class.getSimpleName());
     @Override
     public String execute(HttpServletRequest request) {
         UserService userService = new UserService();
@@ -33,6 +35,7 @@ public class NewTaxReturn implements Command {
 
             taxReturn = taxReturnService.create(taxReturn.getUserId(), taxReturn.getInspectorId(), taxCategory,
                     wage, militaryCollection, incomeTax);
+            LOGGER.info("Tax return has been created successfully");
             request.getSession().setAttribute("inspectorId", taxReturn.getInspectorId());
             return "redirect:taxreturn";
         }

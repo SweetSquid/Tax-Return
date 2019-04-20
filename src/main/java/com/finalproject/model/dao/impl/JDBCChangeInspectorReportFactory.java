@@ -3,6 +3,7 @@ package com.finalproject.model.dao.impl;
 import com.finalproject.model.dao.ChangeInspectorReportDao;
 import com.finalproject.model.dao.DaoFactory;
 import com.finalproject.model.entity.ChangeInspectorReport;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.ResourceBundle;
 public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
+    private final static Logger LOGGER = Logger.getLogger(JDBCChangeInspectorReportFactory.class.getSimpleName());
+
 
     JDBCChangeInspectorReportFactory(Connection connection) {
         this.connection = connection;
@@ -30,6 +33,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while creating report");
             e.printStackTrace();
         }
         return false;
@@ -58,6 +62,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
                 return extractFromResultSet(rs);
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching report with id: " + id);
             e.printStackTrace();
         }
         return null;
@@ -72,6 +77,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for all reports");
             e.printStackTrace();
         }
         return result;
@@ -92,6 +98,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             taxReturnFactory.close();
             return true;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while updating report with id: " + id);
             e.printStackTrace();
         }
         return false;
@@ -121,6 +128,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
                 result.add(extractFromResultSet(rs));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for report by user id: " + userId);
             e.printStackTrace();
         }
         return result;
@@ -139,8 +147,24 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for list of changeInspectorReport in range (" + offset +
+                    ", " + length + ") by user id: " + userId);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean checkExistence(int userId) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("change.inspector.check.existence"))) {
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -154,6 +178,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             }
             return result;
         } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for count of query");
             throw new RuntimeException(e);
         }
     }

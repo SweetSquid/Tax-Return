@@ -10,4 +10,6 @@ public interface ChangeInspectorReportDao extends GenericDao<ChangeInspectorRepo
     int getPageCount(int userId);
 
     List<ChangeInspectorReport> getInRange(int offset, int length, int inspectorId);
+
+    boolean checkExistence(int userId);
 }
