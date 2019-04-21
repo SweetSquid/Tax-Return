@@ -36,6 +36,13 @@ public class TaxReturnService {
         }
     }
 
+    public TaxReturn create(TaxReturn taxReturn) {
+        try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
+            dao.create(taxReturn);
+            return taxReturn;
+        }
+    }
+
     public TaxReturn getTaxReturnByActionId(int id) {
         try (JDBCTaxReturnFactory dao = daoFactory.createTaxReturn()) {
             return dao.getTaxReturnByActionId(id);

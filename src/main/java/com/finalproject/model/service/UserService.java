@@ -35,6 +35,13 @@ public class UserService {
         return result;
     }
 
+    /**
+     * The method sign in user if data is correct.
+     *
+     * @param username user's username
+     * @param password user's password.
+     * @return {@code true} if data is correct or {@code false} if it's not .
+     */
     public boolean signIn(String username, String password) {
         PasswordService service = new JBCrypt();
         Optional<User> user = username(username);
@@ -47,6 +54,22 @@ public class UserService {
         }
     }
 
+    /**
+     * The method register user if data is correct.
+     *
+     * @param request  HttpServletRequest request
+     * @param fullName user's full name
+     * @param username user's username
+     * @param email    user's email
+     * @param idCode   user's id code
+     * @param phone    user's phone
+     * @param password user's password.
+     * @return {@code true} if registration is successful or {@code false} if it's not.
+     * @throws NotUniqueUsernameException if username is not unique
+     * @throws NotUniquePhoneException    if phone is not unique
+     * @throws NotUniqueEmailException    if email is not unique
+     * @throws NotUniqueIdCodeException   if id code is not unique
+     */
     public boolean register(HttpServletRequest request, String fullName,
                             String username, String email, String idCode, String phone, String password) {
         PasswordService service = new JBCrypt();

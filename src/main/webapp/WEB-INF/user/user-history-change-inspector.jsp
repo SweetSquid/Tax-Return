@@ -116,7 +116,6 @@
                     <tr>
                         <th scope="col"><fmt:message key="admin.change.previous" bundle="${link}"/></th>
                         <th scope="col"><fmt:message key="admin.change.new" bundle="${link}"/></th>
-                        <th scope="col"><fmt:message key="admin.change.message" bundle="${link}"/></th>
                         <th scope="col"><fmt:message key="admin.change.date" bundle="${link}"/></th>
                     </tr>
                     </thead>
@@ -132,9 +131,6 @@
                                 </td>
                                 <td class="w-25"><span class="categories ol1"><c:out
                                         value="${report.getNewInspectorId()}"/></span></td>
-                                <td class="w-25"><span class="categories col1"><c:out
-                                        value="${report.getMessage()}"/></span>
-                                </td>
                                 <td class="w-25"><span class="categories col1">
                                     <c:set var="pattern"><fmt:message key="common.time" bundle="${link}"/></c:set>
                                     <fmt:parseDate value="${ report.getDate() }" pattern="yyyy-MM-dd'T'HH:mm"

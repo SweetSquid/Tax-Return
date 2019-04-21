@@ -122,8 +122,11 @@
                     <tbody>
                     <c:forEach items="${userActionReportList}" var="actionReport">
                         <tr>
-                            <td class="w-25"><span class="categories ol1"><c:out
-                                    value="${actionReport.getAction()}"/></span></td>
+                            <td class="w-25"><span class="categories ol1">
+                                <c:if test="${actionReport.getAction() eq 'EDIT'}">
+                                    <fmt:message key="common.edit" bundle="${link}"/>
+                                </c:if>
+                              </span></td>
                             <td class="w-25"><span class="categories col1"><c:out
                                     value="${actionReport.getMessage()}"/></span>
                             </td>

@@ -84,9 +84,9 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
     }
 
     @Override
-    public boolean update(ChangeInspectorReport entity, int id) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.update"));
+    public boolean update(ChangeInspectorReport entity, int id) throws SQLException {
+        connection.setAutoCommit(false);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.update"))) {
             preparedStatement.setInt(1, entity.getNewInspectorId());
             preparedStatement.setString(2, null);
             preparedStatement.setString(3, entity.getStatus().toString());
@@ -96,10 +96,12 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
             JDBCTaxReturnFactory taxReturnFactory = DaoFactory.getInstance().createTaxReturn();
             taxReturnFactory.changeInspector(entity.getNewInspectorId(), entity.getUserId());
             taxReturnFactory.close();
+            connection.commit();
             return true;
         } catch (SQLException e) {
             LOGGER.error("SQLException while updating report with id: " + id);
             e.printStackTrace();
+            connection.rollback();
         }
         return false;
     }

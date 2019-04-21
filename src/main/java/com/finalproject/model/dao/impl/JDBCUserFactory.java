@@ -22,7 +22,7 @@ public class JDBCUserFactory implements UserDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
-    JDBCUserFactory(Connection connection) {
+    public JDBCUserFactory(Connection connection) {
         this.connection = connection;
         LOGGER.debug("Creating instance of " + this.getClass().getName());
     }
@@ -109,7 +109,7 @@ public class JDBCUserFactory implements UserDao {
     @Override
     public User readId(int id) {
         User user = new User();
-        try (PreparedStatement ps = connection.prepareCall(bundle.getString("user.find.role.inspector"))) {
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("user.read.id"))) {
             ResultSet rs = ps.executeQuery();
             user = extractFromResultSet(rs);
             LOGGER.info("Search user by id is successful");
@@ -128,15 +128,38 @@ public class JDBCUserFactory implements UserDao {
 
     @Override
     public boolean update(User user, int id) {
-        //TODO create method
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("user.update"))) {
+            preparedStatement.setString(1, user.getRole().toString());
+            preparedStatement.setString(2, user.getFullName());
+            preparedStatement.setString(3, user.getUsername());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setString(6, user.getPhone());
+            preparedStatement.setString(7, user.getIdCode());
+            preparedStatement.setInt(8, id);
+            preparedStatement.executeUpdate();
+            LOGGER.info("Update user by id is successful");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQLException while updating user with id: " + id);
+        }
+
         return false;
     }
 
 
     @Override
     public boolean delete(int id) {
-        //TODO create method
-        return false;
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("user.delete"))) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            LOGGER.info("Performed delete of user with id=" + id);
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException trying to delete user with id=" + id, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

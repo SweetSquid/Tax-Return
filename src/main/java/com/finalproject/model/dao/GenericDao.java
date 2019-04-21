@@ -17,7 +17,7 @@ public interface GenericDao<T> extends AutoCloseable {
 
     List<T> readAll();
 
-    boolean update(T t, int id);
+    boolean update(T t, int id) throws SQLException;
 
     boolean delete(int id);
 

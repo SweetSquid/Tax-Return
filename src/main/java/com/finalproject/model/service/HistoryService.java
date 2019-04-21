@@ -25,6 +25,13 @@ public class HistoryService {
         return false;
     }
 
+    public boolean delete(int historyId) {
+        try (JDBCHistoryFactory historyDao = daoFactory.createHistory()) {
+            historyDao.delete(historyId);
+            return true;
+        }
+    }
+
 
     public List<History> getHistoryList(String currentPage, int userId) {
 

@@ -20,7 +20,7 @@ public class ChangeInspector implements Command {
             return "error";
         } else if (service.checkExistence(userId)) {
             LOGGER.error("User is trying to create another request for a change of inspector.");
-            request.setAttribute("alreadyExist", "true");
+            request.setAttribute("alreadyExist", true);
         } else if (request.getParameter("message") != null) {
             int prevInspectorId = (Integer) request.getSession().getAttribute("inspectorId");
             String message = request.getParameter("message");

@@ -4,6 +4,7 @@ import com.finalproject.model.dao.DaoFactory;
 import com.finalproject.model.dao.impl.JDBCChangeInspectorReportFactory;
 import com.finalproject.model.entity.ChangeInspectorReport;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,10 @@ public class ChangeInspectorReportService {
     public boolean update(ChangeInspectorReport entity, int id) {
         try (JDBCChangeInspectorReportFactory dao = daoFactory.createChangeInspectorReport()) {
             return dao.update(entity, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     public boolean checkExistence(int userId) {

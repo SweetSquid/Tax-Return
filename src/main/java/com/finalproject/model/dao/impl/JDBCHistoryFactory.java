@@ -88,7 +88,15 @@ public class JDBCHistoryFactory implements HistoryDao {
 
     @Override
     public boolean delete(int id) {
-        return false;
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("history.delete"))) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            LOGGER.info("Performed delete of history with id=" + id);
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException trying to delete history with id=" + id, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -12,9 +12,10 @@
     <title><fmt:message key="user.change.name" bundle="${link}"/></title>
 
 
-    <
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+    <script src="${pageContext.request.contextPath}/webjars/jquery/3.0.0/jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
@@ -89,38 +90,58 @@
         </div>
     </div>
 </section>
-
-<section class="login py-5 border-top-1">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-8 align-item-center">
-                <div class="border border">
-                    <h3 class="bg-gray p-4"><fmt:message key="user.change.name" bundle="${link}"/></h3>
-                    <form method="post" action="${pageContext.request.contextPath}/taxreturn/change-inspector">
-                        <fieldset class="p-4">
+<c:if test="${alreadyExist ne true}">
+    <section class="login py-5 border-top-1">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-8 align-item-center">
+                    <div class="border border">
+                        <h3 class="bg-gray p-4"><fmt:message key="user.change.name" bundle="${link}"/></h3>
+                        <form method="post" action="${pageContext.request.contextPath}/taxreturn/change-inspector">
+                            <fieldset class="p-4">
                             <textarea name="message" class="border p-3 w-100 my-3 "
                                       placeholder="<fmt:message key="user.change.reason" bundle="${link}"/>"
                                       maxlength="299" style="resize: none"></textarea>
-                            <div class="loggedin-forgot d-inline-flex my-1">
-                                <button type="submit"
-                                        class="d-block py-3 px-4 bg-primary text-white border-0 rounded font-weight-bold">
-                                    <fmt:message key="user.change.create" bundle="${link}"/>
-                                </button>
-                            </div>
-                        </fieldset>
-                    </form>
+                                <div class="loggedin-forgot d-inline-flex my-1">
+                                    <button type="submit"
+                                            class="d-block py-3 px-4 bg-primary text-white border-0 rounded font-weight-bold">
+                                        <fmt:message key="user.change.create" bundle="${link}"/>
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</c:if>
 
+<c:if test="${alreadyExist eq true}">
+    <section class="overly  section-sm" style="margin-top:20vh">
+        <!-- Container Start -->
+        <div class="container">
+            <div class="row justify-content-md-center text-center">
+                <div class="col-md-8">
+                    <p style="font-size: 5em"><fmt:message key="user.change.no" bundle="${link}"/></p>
+                </div>
+            </div>
+        </div>
+        <!-- Container End -->
+    </section>
+</c:if>
 
 <jsp:include page="${pageContext.request.contextPath}/footer.jsp"/>
 </body>
 </html>
 
-
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 2000);
+</script>
 
 
 
