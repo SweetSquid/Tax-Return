@@ -7,6 +7,9 @@ import com.finalproject.model.service.TaxReturnService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * Shows all users tax return list that belong to inspector
+ */
 public class TaxReturnData implements Command {
     @Override
     public String execute(HttpServletRequest request) {

@@ -4,6 +4,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Deletes user session
+ */
 public class Logout implements Command {
     private final static Logger LOGGER = Logger.getLogger(Logout.class.getSimpleName());
 

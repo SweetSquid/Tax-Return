@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Sets access by role
+ */
 public class AuthorizationFilter implements Filter {
     private Map<String, Command> commands = new HashMap<>();
 
@@ -28,7 +31,6 @@ public class AuthorizationFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String role = (String) request.getSession().getAttribute("role");
-        commands.clear();
 
         if (role == null) {
             commands.put("login", new Login());

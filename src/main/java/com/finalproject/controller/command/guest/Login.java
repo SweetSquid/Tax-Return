@@ -10,9 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Sign in user if all data is correct
+ */
 public class Login implements Command {
     private Map<String, String> users = new HashMap<>();
     private final static Logger LOGGER = Logger.getLogger(Login.class.getSimpleName());
+    private UserService userService = new UserService();
 
     public Login() {
         users.put("login", "index.jsp");
@@ -31,7 +35,6 @@ public class Login implements Command {
             return "/login.jsp";
         }
 
-        UserService userService = new UserService();
         if (userService.signIn(username, password)) {
             LOGGER.info("User " + username + " sign in successful");
             Optional<User> user = userService.username(username);
@@ -49,5 +52,9 @@ public class Login implements Command {
             LOGGER.error("Attempt to sign in: wrong username or password");
         }
         return "/login.jsp";
+    }
+
+    public void setService(UserService service) {
+        userService = service;
     }
 }

@@ -4,6 +4,9 @@ package com.finalproject.controller.filters;
 import javax.servlet.*;
 import java.io.IOException;
 
+/**
+ * Sets request and response encoding for all pages to UTF-8
+ */
 public class EncodingFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {

@@ -11,6 +11,9 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+/**
+ * Approves user's tax return
+ */
 public class Approve implements Command {
     private final static Logger LOGGER = Logger.getLogger(Approve.class.getSimpleName());
 

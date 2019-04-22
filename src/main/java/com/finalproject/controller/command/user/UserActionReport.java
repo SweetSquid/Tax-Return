@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Shows all user's reports
+ */
 public class UserActionReport implements Command {
     @Override
     public String execute(HttpServletRequest request) {

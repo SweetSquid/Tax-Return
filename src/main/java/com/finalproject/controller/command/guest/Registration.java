@@ -5,6 +5,9 @@ import com.finalproject.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Register user if all data is correct
+ */
 public class Registration implements Command {
 
     @Override

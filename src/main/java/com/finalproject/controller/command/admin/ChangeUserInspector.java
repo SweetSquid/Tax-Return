@@ -10,6 +10,9 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * Changes user's inspector by request
+ */
 public class ChangeUserInspector implements Command {
     private final static Logger LOGGER = Logger.getLogger(ChangeUserInspector.class.getSimpleName());
 

@@ -8,6 +8,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Creates new request to change user's inspector if it doesn't exist
+ */
 public class ChangeInspector implements Command {
     private final static Logger LOGGER = Logger.getLogger(Login.class.getSimpleName());
 
@@ -20,7 +23,7 @@ public class ChangeInspector implements Command {
             return "error";
         } else if (service.checkExistence(userId)) {
             LOGGER.error("User is trying to create another request for a change of inspector.");
-            request.setAttribute("alreadyExist", true);
+            request.setAttribute("alreadyExist", "true");
         } else if (request.getParameter("message") != null) {
             int prevInspectorId = (Integer) request.getSession().getAttribute("inspectorId");
             String message = request.getParameter("message");

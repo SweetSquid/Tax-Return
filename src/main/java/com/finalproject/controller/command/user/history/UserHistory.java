@@ -5,6 +5,9 @@ import com.finalproject.model.service.HistoryService;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Shows user's tax return history
+ */
 public class UserHistory implements Command {
     @Override
     public String execute(HttpServletRequest request) {

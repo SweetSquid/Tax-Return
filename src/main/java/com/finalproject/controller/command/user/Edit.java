@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Sends edited tax return
+ */
 public class Edit implements Command {
     private final static Logger LOGGER = Logger.getLogger(Edit.class.getSimpleName());
 

@@ -69,13 +69,12 @@
     </div>
 </section>
 
-<section class="overly bg-3 section-sm">
+<section class="overly  section-sm" style="margin-top:20vh">
     <!-- Container Start -->
     <div class="container">
         <div class="row justify-content-md-center text-center">
-            <div class="col-md-8">
-                <div style="size: auto; color: #07ad76">
-                </div>
+            <div class="col-md-12">
+                <p style="font-size: 5em"><fmt:message key="inspector.greeting" bundle="${link}"/></p>
             </div>
         </div>
     </div>

@@ -108,13 +108,13 @@
                                     </c:forEach>
                                 </select>
                             </label>
-                            <input type="text" name="wage" <%--value="Wage"--%>
+                            <input type="text" name="wage" pattern="^[0-9]+([.][0-9]+)?$"
                                    placeholder="<fmt:message key="user.new.wage" bundle="${link}"/>"
                                    class="border p-3 w-100 my-2" required> <br>
-                            <input type="text" name="militaryCollection" <%--value="militaryCollection"--%>
+                            <input type="text" name="militaryCollection" pattern="^[0-9]+([.][0-9]+)?$"
                                    placeholder="<fmt:message key="user.new.military" bundle="${link}"/>"
                                    class="border p-3 w-100 my-2" required> <br>
-                            <input type="text" name="incomeTax" <%--value="incomeTax"--%>
+                            <input type="text" name="incomeTax" pattern="^[0-9]+([.][0-9]+)?$"
                                    placeholder="<fmt:message key="user.new.income" bundle="${link}"/>"
                                    class="border p-3 w-100 my-2" required> <br>
 

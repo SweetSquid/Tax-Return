@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Sets locale for user by "lang" parameter
+ */
 public class LangFilter implements Filter {
     private Map<String, Locale> langMap = new HashMap<>();
 

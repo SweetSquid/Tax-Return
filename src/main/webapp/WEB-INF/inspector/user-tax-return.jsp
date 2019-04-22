@@ -196,7 +196,7 @@
         <div class="container">
             <div class="row justify-content-md-center text-center">
                 <div class="col-md-8">
-                    <p style="font-size: 5em"><fmt:message key="inspector.tax.noreturn" bundle="${link}"/></p>
+                    <p style="font-size: 4em"><fmt:message key="inspector.tax.noreturn" bundle="${link}"/></p>
                 </div>
             </div>
         </div>

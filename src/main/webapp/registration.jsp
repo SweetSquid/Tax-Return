@@ -193,8 +193,3 @@
 </script>
 </body>
 </html>
-
-
-<script>
-    console.log('VYKONAV KISIK inokenti for MYKYTA FROLOV')
-</script>

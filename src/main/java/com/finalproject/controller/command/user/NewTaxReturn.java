@@ -10,8 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Creates new tax return
+ */
 public class NewTaxReturn implements Command {
     private final static Logger LOGGER = Logger.getLogger(NewTaxReturn.class.getSimpleName());
+
     @Override
     public String execute(HttpServletRequest request) {
         UserService userService = new UserService();
@@ -43,6 +47,12 @@ public class NewTaxReturn implements Command {
         return "/WEB-INF/user/new-tax-return.jsp";
     }
 
+    /**
+     * Gets user random inspector if he does not have it
+     *
+     * @param list list of all existing inspector in system
+     * @return random inspector id
+     */
     private int getRandomElement(List<Integer> list) {
         Random rand = new Random();
         return list.get(rand.nextInt(list.size()));

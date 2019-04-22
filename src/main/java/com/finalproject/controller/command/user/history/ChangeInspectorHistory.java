@@ -5,6 +5,10 @@ import com.finalproject.model.service.ChangeInspectorReportService;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+/**
+ * Shows user's changing inspector history
+ */
 public class ChangeInspectorHistory implements Command {
     @Override
     public String execute(HttpServletRequest request) {
