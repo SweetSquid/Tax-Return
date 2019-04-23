@@ -22,8 +22,7 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
 
     @Override
     public boolean create(ChangeInspectorReport entity) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.create"));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("change.inspector.create"))) {
             preparedStatement.setInt(1, entity.getUserId());
             preparedStatement.setInt(2, entity.getPreviousInspectorId());
             preparedStatement.setInt(3, entity.getNewInspectorId());
@@ -108,6 +107,14 @@ public class JDBCChangeInspectorReportFactory implements ChangeInspectorReportDa
 
     @Override
     public boolean delete(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("change.inspector.delete"))) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while deleting changeInspectorReport by id: " + id);
+            e.printStackTrace();
+        }
         return false;
     }
 

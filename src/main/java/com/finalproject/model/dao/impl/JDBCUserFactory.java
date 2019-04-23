@@ -22,7 +22,7 @@ public class JDBCUserFactory implements UserDao {
     private Connection connection;
     private static ResourceBundle bundle = ResourceBundle.getBundle("database/queries");
 
-    public JDBCUserFactory(Connection connection) {
+    JDBCUserFactory(Connection connection) {
         this.connection = connection;
         LOGGER.debug("Creating instance of " + this.getClass().getName());
     }
@@ -82,7 +82,6 @@ public class JDBCUserFactory implements UserDao {
             preparedStatement.setString(6, user.getPhone());
             preparedStatement.setString(7, user.getIdCode());
             preparedStatement.execute();
-            LOGGER.info("User " + user.getUsername() + " registered successfully");
             connection.commit();
             return true;
         } catch (SQLException e) {
@@ -122,8 +121,17 @@ public class JDBCUserFactory implements UserDao {
 
     @Override
     public List<User> readAll() {
-        //TODO create method
-        return null;
+        List<User> result = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("user.read.all"))) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(extractFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for all tax returns");
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
@@ -174,11 +182,8 @@ public class JDBCUserFactory implements UserDao {
 
     @Override
     public Optional<User> findByType(String type, String value) {
-
         Optional<User> result = Optional.empty();
-
         String query = "SELECT * FROM users WHERE " + type + " = ?";
-
         try (PreparedStatement ps = connection.prepareCall(query)) {
             ps.setString(1, value);
             ResultSet rs = ps.executeQuery();

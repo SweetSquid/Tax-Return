@@ -153,19 +153,28 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
 
     @Override
     public TaxReturn readId(int id) {
-        return null;
+        Optional<TaxReturn> result = findById(id);
+        return result.orElse(null);
     }
 
     @Override
     public List<TaxReturn> readAll() {
-
-        return null;
+        List<TaxReturn> result = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareCall(bundle.getString("taxreturn.read.all"))) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(extractFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while searching for all tax returns");
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public boolean update(TaxReturn taxReturn, int taxReturnId) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("taxreturn.update"));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("taxreturn.update"))) {
             preparedStatement.setString(1, taxReturn.getCategory());
             preparedStatement.setObject(2, taxReturn.getDate());
             preparedStatement.setDouble(3, taxReturn.getWage());
@@ -183,7 +192,14 @@ public class JDBCTaxReturnFactory implements TaxReturnDao {
 
     @Override
     public boolean delete(int id) {
-
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("action.report.delete"))) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while deleting tax return by id: " + id);
+            e.printStackTrace();
+        }
         return false;
     }
 

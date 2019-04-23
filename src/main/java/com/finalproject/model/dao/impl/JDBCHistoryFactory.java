@@ -22,8 +22,7 @@ public class JDBCHistoryFactory implements HistoryDao {
 
     @Override
     public boolean create(History history) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("history.create"));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("history.create"))) {
             preparedStatement.setInt(1, history.getTaxReturnId());
             preparedStatement.setInt(2, history.getUserId());
             preparedStatement.setString(3, history.getAction().toString());
@@ -83,6 +82,19 @@ public class JDBCHistoryFactory implements HistoryDao {
 
     @Override
     public boolean update(History history, int id) {
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("history.update"))) {
+            statement.setInt(1, history.getTaxReturnId());
+            statement.setInt(2, history.getUserId());
+            statement.setString(3, history.getAction().toString());
+            statement.setString(4, history.getMessage());
+            statement.setObject(5, history.getDate());
+            statement.setInt(6, id);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while updating history by id: " + id);
+            e.printStackTrace();
+        }
         return false;
     }
 

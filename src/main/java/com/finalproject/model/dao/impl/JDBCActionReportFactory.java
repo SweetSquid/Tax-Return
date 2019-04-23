@@ -20,8 +20,7 @@ public class JDBCActionReportFactory implements ActionReportDao {
 
     @Override
     public boolean create(ActionReport actionReport) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("action.report.create"));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bundle.getString("action.report.create"))) {
             preparedStatement.setString(1, actionReport.getAction().toString());
             preparedStatement.setString(2, actionReport.getMessage());
             preparedStatement.setObject(3, actionReport.getDate());
@@ -95,14 +94,24 @@ public class JDBCActionReportFactory implements ActionReportDao {
 
     @Override
     public boolean update(ActionReport actionReport, int id) {
-        //TODO create update
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("action.report.update"))) {
+            statement.setString(1, actionReport.getAction().toString());
+            statement.setString(2, actionReport.getMessage());
+            statement.setObject(3, actionReport.getDate());
+            statement.setInt(4, actionReport.getTaxReturnId());
+            statement.setInt(5, id);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException while updating action report by id: " + id);
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean delete(int reportId) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(bundle.getString("action.report.delete"));
+        try (PreparedStatement statement = connection.prepareStatement(bundle.getString("action.report.delete"))) {
             statement.setInt(1, reportId);
             statement.executeUpdate();
             return true;
