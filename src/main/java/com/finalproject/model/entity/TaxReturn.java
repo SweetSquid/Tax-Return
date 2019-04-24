@@ -112,6 +112,58 @@ public class TaxReturn {
         this.incomeTax = incomeTax;
     }
 
+    public static class Builder {
+        private TaxReturn newTaxReturn;
+
+        public Builder() {
+            newTaxReturn = new TaxReturn();
+        }
+
+        public Builder setId(int id) {
+            newTaxReturn.id = id;
+            return this;
+        }
+
+        public Builder setUserId(int userId) {
+            newTaxReturn.userId = userId;
+            return this;
+        }
+
+        public Builder setInspectorId(int inspectorId) {
+            newTaxReturn.inspectorId = inspectorId;
+            return this;
+        }
+
+        public Builder setCategory(String category) {
+            newTaxReturn.category = category;
+            return this;
+        }
+
+        public Builder setDate(LocalDateTime date) {
+            newTaxReturn.date = date;
+            return this;
+        }
+
+        public Builder setWage(double wage) {
+            newTaxReturn.wage = wage;
+            return this;
+        }
+
+        public Builder setMilitaryCollection(double militaryCollection) {
+            newTaxReturn.militaryCollection = militaryCollection;
+            return this;
+        }
+
+        public Builder setIncomeTax(int incomeTax) {
+            newTaxReturn.incomeTax = incomeTax;
+            return this;
+        }
+
+        public TaxReturn build() {
+            return newTaxReturn;
+        }
+    }
+
     public enum Category {
         LAND_TAX("Land tax (3%)"),
         WATER_TAX("Water tax (1.5%)"),

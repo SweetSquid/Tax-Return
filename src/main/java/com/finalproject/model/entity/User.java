@@ -17,50 +17,56 @@ public class User {
         return id;
     }
 
-    public void setId(int id) {
+    public User setId(int id) {
         this.id = id;
+        return this;
     }
 
     public Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public User setRole(Role role) {
         this.role = role;
+        return this;
     }
 
     public String getFullName() {
         return fullname;
     }
 
-    public void setFullname(String fullname) {
+    public User setFullname(String fullname) {
+
         this.fullname = fullname;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -99,16 +105,18 @@ public class User {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public User setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
     public String getIdCode() {
         return idCode;
     }
 
-    public void setIdCode(String idCode) {
+    public User setIdCode(String idCode) {
         this.idCode = idCode;
+        return this;
     }
 
     public enum Role {
