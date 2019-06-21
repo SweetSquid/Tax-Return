@@ -1,4 +1,6 @@
-CREATE DATABASE finalproject
+CREATE DATABASE finalproject;
+
+use finalproject;
 
 create table users
 (
@@ -8,7 +10,7 @@ create table users
   fullname varchar(45) not null,
   username varchar(45) not null,
   email    varchar(45) not null,
-  password varchar(45) not null,
+  password varchar(255) not null,
   phone    varchar(45) not null,
   id_code  varchar(8)  not null,
   constraint email_UNIQUE
